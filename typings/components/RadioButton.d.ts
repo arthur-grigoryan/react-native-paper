@@ -13,6 +13,8 @@ export interface RadioButtonProps extends TouchableRipplePropsWithoutChildren {
   status?: 'checked' | 'unchecked';
   uncheckedColor?: string;
   color?: string;
+  checkedRippleColor?: string;
+  uncheckedRippleColor?: string;
 }
 
 export declare class RadioButton extends React.Component<RadioButtonProps> {

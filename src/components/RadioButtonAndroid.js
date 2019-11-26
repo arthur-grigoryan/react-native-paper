@@ -30,6 +30,14 @@ type Props = $RemoveChildren<typeof TouchableRipple> & {|
    */
   uncheckedColor?: string,
   /**
+   * Custom ripple color for unchecked radio.
+   */
+  uncheckedRippleColor?: string,
+  /**
+   * Custom ripple color for checked radio.
+   */
+  checkedRippleColor?: string,
+  /**
    * Custom color for radio.
    */
   color?: string,
@@ -104,24 +112,32 @@ class RadioButtonAndroid extends React.Component<Props, State> {
               .rgb()
               .string();
 
-          let rippleColor, radioColor;
-
           const checked = context
             ? context.value === this.props.value
             : this.props.status === 'checked';
 
-          if (disabled) {
-            rippleColor = color(theme.colors.text)
-              .alpha(0.16)
-              .rgb()
-              .string();
-            radioColor = theme.colors.disabled;
-          } else {
-            rippleColor = color(checkedColor)
-              .fade(0.32)
-              .rgb()
-              .string();
-            radioColor = checked ? checkedColor : uncheckedColor;
+          const radioColor = disabled
+            ? theme.colors.disabled
+            : checked
+            ? checkedColor
+            : uncheckedColor;
+
+          let rippleColor = checked
+            ? this.props.checkedRippleColor
+            : this.props.uncheckedRippleColor;
+
+          if (!rippleColor) {
+            if (disabled) {
+              rippleColor = color(theme.colors.text)
+                .alpha(0.16)
+                .rgb()
+                .string();
+            } else {
+              rippleColor = color(checkedColor)
+                .fade(0.32)
+                .rgb()
+                .string();
+            }
           }
 
           return (

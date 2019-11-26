@@ -7,6 +7,8 @@ export interface CheckboxProps extends TouchableHighlightProps, TouchableNativeF
   uncheckedColor?: string;
   color?: string;
   theme?: ThemeShape;
+  uncheckedRippleColor?: string;
+  checkedRippleColor?: string;
 }
 
 export declare class Checkbox extends React.Component<CheckboxProps> {

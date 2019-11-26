@@ -21,6 +21,14 @@ type Props = React.ElementConfig<typeof NativeSwitch> & {|
    */
   value?: boolean,
   /**
+   * Custom color for switch thumb.
+   */
+  gripColor?: SwitchColor,
+  /**
+   * Custom color for switch track.
+   */
+  gripTrackColor?: SwitchColor,
+  /**
    * Custom color for switch.
    */
   color?: string,
@@ -88,16 +96,50 @@ class Switch extends React.Component<Props> {
       disabled,
       onValueChange,
       color,
+      gripTrackColor,
+      gripColor,
       theme,
       ...rest
     } = this.props;
 
-    const checkedColor = color || theme.colors.accent;
+    let thumbTintColor = undefined;
+    let onTintColor = undefined;
 
-    const onTintColor =
-      Platform.OS === 'ios'
-        ? checkedColor
-        : disabled
+    if (gripColor && gripTrackColor) {
+      const gripCheckedColor = gripColor.on || theme.colors.accent;
+      const trackCheckedColor =
+        gripTrackColor.on ||
+        setColor(gripCheckedColor)
+          .alpha(0.5)
+          .rgb()
+          .string();
+
+      onTintColor = trackCheckedColor;
+      if (Platform.OS === 'android') {
+        thumbTintColor = value ? gripCheckedColor : gripColor.off;
+
+        if (disabled) {
+          const disabledColor =
+            gripTrackColor.disabled ||
+            setColor(black)
+              .alpha(0.12)
+              .rgb()
+              .string();
+
+          onTintColor = theme.dark
+            ? setColor(white)
+                .alpha(0.1)
+                .rgb()
+                .string()
+            : disabledColor;
+        }
+      }
+    } else {
+      const checkedColor = color || theme.colors.accent;
+      onTintColor =
+        Platform.OS === 'ios'
+          ? checkedColor
+          : disabled
           ? theme.dark
             ? setColor(white)
                 .alpha(0.1)
@@ -112,18 +154,19 @@ class Switch extends React.Component<Props> {
               .rgb()
               .string();
 
-    const thumbTintColor =
-      Platform.OS === 'ios'
-        ? undefined
-        : disabled
+      thumbTintColor =
+        Platform.OS === 'ios'
+          ? undefined
+          : disabled
           ? theme.dark
             ? grey800
             : grey400
           : value
-            ? checkedColor
-            : theme.dark
-              ? grey400
-              : grey50;
+          ? checkedColor
+          : theme.dark
+          ? grey400
+          : grey50;
+    }
 
     const props =
       version && version.major === 0 && version.minor <= 56
@@ -135,6 +178,11 @@ class Switch extends React.Component<Props> {
             thumbColor: thumbTintColor,
             trackColor: {
               true: onTintColor,
+              false: !gripTrackColor
+                ? undefined
+                : disabled
+                ? onTintColor
+                : gripTrackColor.off,
             },
           };
 

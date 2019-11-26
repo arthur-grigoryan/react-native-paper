@@ -26,6 +26,14 @@ type Props = $RemoveChildren<typeof TouchableRipple> & {|
    */
   uncheckedColor?: string,
   /**
+   * Custom ripple color for unchecked checkbox.
+   */
+  uncheckedRippleColor?: string,
+  /**
+   * Custom ripple color for checked checkbox.
+   */
+  checkedRippleColor?: string,
+  /**
    * Custom color for checkbox.
    */
   color?: string,
@@ -91,21 +99,29 @@ class CheckboxAndroid extends React.Component<Props, State> {
         .rgb()
         .string();
 
-    let rippleColor, checkboxColor;
+    let rippleColor = checked
+      ? this.props.checkedRippleColor
+      : this.props.uncheckedRippleColor;
 
-    if (disabled) {
-      rippleColor = color(theme.colors.text)
-        .alpha(0.16)
-        .rgb()
-        .string();
-      checkboxColor = theme.colors.disabled;
-    } else {
-      rippleColor = color(checkedColor)
-        .fade(0.32)
-        .rgb()
-        .string();
-      checkboxColor = checked ? checkedColor : uncheckedColor;
+    if (!rippleColor) {
+      if (disabled) {
+        rippleColor = color(theme.colors.text)
+          .alpha(0.16)
+          .rgb()
+          .string();
+      } else {
+        rippleColor = color(checkedColor)
+          .fade(0.32)
+          .rgb()
+          .string();
+      }
     }
+
+    const checkboxColor = disabled
+      ? theme.colors.disabled
+      : checked
+      ? checkedColor
+      : uncheckedColor;
 
     const borderWidth = this.state.scaleAnim.interpolate({
       inputRange: [0.8, 1],
@@ -115,8 +131,8 @@ class CheckboxAndroid extends React.Component<Props, State> {
     const icon = indeterminate
       ? 'indeterminate-check-box'
       : checked
-        ? 'check-box'
-        : 'check-box-outline-blank';
+      ? 'check-box'
+      : 'check-box-outline-blank';
 
     return (
       <TouchableRipple
