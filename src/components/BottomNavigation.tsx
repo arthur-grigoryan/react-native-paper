@@ -167,6 +167,7 @@ type Props = {
    * Function to execute on tab press. It receives the route for the pressed tab, useful for things like scroll to top.
    */
   onTabPress?: (props: { route: Route }) => void;
+  isItemsAccessible?: boolean;
   /**
    * Custom color for icon and label in the active tab.
    */
@@ -578,6 +579,7 @@ class BottomNavigation extends React.Component<Props, State> {
       getAccessibilityLabel = ({ route }: { route: Route }) =>
         route.accessibilityLabel,
       getTestID = ({ route }: { route: Route }) => route.testID,
+      isItemsAccessible,
       activeColor,
       inactiveColor,
       keyboardHidesNavigationBar,
@@ -804,6 +806,7 @@ class BottomNavigation extends React.Component<Props, State> {
                     rippleColor={touchColor}
                     onPress={() => this.handleTabPress(index)}
                     testID={getTestID({ route })}
+                    accessible={isItemsAccessible}
                     accessibilityLabel={getAccessibilityLabel({ route })}
                     accessibilityTraits={
                       focused ? ['button', 'selected'] : 'button'
