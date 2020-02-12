@@ -29,6 +29,10 @@ type Props = {
    * @optional
    */
   theme: Theme;
+  /**
+   * Pass down testID to touchable for tests.
+   */
+  testID?: string;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -41,7 +45,7 @@ class MenuItem extends React.Component<Props> {
   static displayName = 'Menu.Item';
 
   render() {
-    const { icon, title, disabled, onPress, theme, style } = this.props;
+    const { icon, title, disabled, onPress, theme, style, testID } = this.props;
 
     const disabledColor = color(theme.dark ? white : black)
       .alpha(0.32)
@@ -67,6 +71,7 @@ class MenuItem extends React.Component<Props> {
         style={[styles.container, style]}
         onPress={onPress}
         disabled={disabled}
+        testID={testID}
       >
         <View style={styles.row}>
           {icon ? (

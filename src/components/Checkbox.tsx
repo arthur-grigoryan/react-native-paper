@@ -10,6 +10,8 @@ import { withTheme } from '../core/theming';
 import { Theme } from '../types';
 
 type Props = {
+  testID?: string;
+  accessibilityLabel?: string;
   /**
    * Status of checkbox.
    */

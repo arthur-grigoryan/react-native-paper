@@ -5,9 +5,10 @@ import RadioButtonAndroid from './RadioButtonAndroid';
 import RadioButtonIOS from './RadioButtonIOS';
 import RadioButtonItem from './RadioButtonItem';
 import { withTheme } from '../../core/theming';
-import { Theme } from '../../types';
+import { Theme, $RemoveChildren } from '../../types';
+import TouchableRipple from '../TouchableRipple';
 
-export type Props = {
+export type Props = $RemoveChildren<typeof TouchableRipple> & {
   /**
    * Value of the radio button
    */
